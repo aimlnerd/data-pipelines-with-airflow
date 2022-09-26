@@ -1,0 +1,173 @@
+
+version: '3'
+services:
+#  mysql:
+#    image: "mysql:5.7"
+#    ports:
+#      - "3306:3306"
+#    volumes:
+#     - mysql:/var/lib/mysql
+#    environment:
+#      - MYSQL_ROOT_PASSWORD=root
+#      - MYSQL_DATABASE=db
+#      - MYSQL_USER=local
+#      - MYSQL_PASSWORD=hello
+#    command: mysqld --innodb-buffer-pool-size=16G --max-allowed-packet=128M
+#    container_name: mysql
+  
+#  mysql-client:
+#    image: "phpmyadmin"
+#    ports:
+#      - "8082:80"
+#    environment:
+#      - PMA_HOST=mysql
+#    depends_on:
+#      - mysql
+#    container_name: mysql-client
+#
+#  mongo:
+#    image: "mongo"
+#    ports:
+#      - "27017:27017"
+#    volumes:
+#      - mongodb:/data/db
+#    environment:
+#      - MONGO_INITDB_ROOT_USERNAME=root
+#      - MONGO_INITDB_ROOT_PASSWORD=password_mongo
+#    container_name: mongo
+#
+#  mongo-client:
+#    image: mongo-express
+#    ports:
+#      - "8083:8081"
+#    environment:
+#      - ME_CONFIG_MONGODB_SERVER=mongo
+#      - ME_CONFIG_MONGODB_ADMINUSERNAME=root
+#      - ME_CONFIG_MONGODB_ADMINPASSWORD=password_mongo
+#    depends_on:
+#      - mongo
+#    container_name: mongo-client
+#
+#  elasticsearch:
+#    image: docker.elastic.co/elasticsearch/elasticsearch:7.16.2
+#    command: >
+#      bash -c " ! -d /usr/share/elasticsearch/plugins/ingest-attachment | bin/elasticsearch-plugin install -b ingest-attachment | /usr/local/bin/docker-entrypoint.sh"
+#    volumes:
+#      - elasticsearch:/usr/share/elasticsearch/data
+#    environment:
+#      - bootstrap.memory_lock=true
+#      - thread_pool.write.queue_size=400
+#      - "ES_JAVA_OPTS=-Xms1g -Xmx2g"
+#      - discovery.type=single-node
+#    ports:
+#      - "9300:9300"
+#      - "9200:9200"
+#    ulimits:
+#      memlock:
+#        soft: -1
+#        hard: -1
+#    container_name: elasticsearch
+
+#  elasticsearch-client:
+#    image: "docker.elastic.co/kibana/kibana:7.16.2"
+#    ports:
+#      - "5601:5601"
+#    environment:
+#      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+#    depends_on:
+#      - elasticsearch
+#    container_name: elasticsearch-client
+
+#  es-indexer:
+#    build: init_es/
+#    volumes:
+#      - ../../dumps-data/dumps-ES:/app/data
+#    depends_on:
+#      - elasticsearch
+#    environment:
+#      - WAIT_HOSTS=elasticsearch:9200
+#      - WAIT_HOSTS_TIMEOUT=300
+#      - WAIT_SLEEP_INTERVAL=30
+#      - WAIT_HOST_CONNECT_TIMEOUT=30
+#    container_name: es-indexer
+#
+#  mongo-indexer:
+#    build: init_mongo/
+#    volumes:
+#      - ../../dumps-data/dumps-mongodb:/app/data
+#    depends_on:
+#      - mongo
+#    environment:
+#      - WAIT_HOSTS=mongo:27017
+#      - WAIT_HOSTS_TIMEOUT=300
+#      - WAIT_SLEEP_INTERVAL=30
+#      - WAIT_HOST_CONNECT_TIMEOUT=30deepu
+
+#    container_name: mongo-indexer
+#
+#  mysql-indexer:
+#    build: init_mysql/
+#    volumes:
+#      - ../../dumps-data/dumps-sql:/app/data
+#    depends_on:
+#      - mysql
+#    environment:
+#      - WAIT_HOSTS=mysql:3306
+#      - WAIT_HOSTS_TIMEOUT=300
+#      - WAIT_SLEEP_INTERVAL=30
+#      - WAIT_HOST_CONNECT_TIMEOUT=30
+#    container_name: mysql-indexer
+
+  blob-storage:
+    container_name: blob-storage
+    image: mcr.microsoft.com/azure-storage/azurite
+    command: "azurite --loose --blobHost 0.0.0.0  --queueHost 0.0.0.0"
+    ports:
+      - 10001:10001
+      - 10000:10000
+
+  postgres:
+    image: postgres
+    environment:
+      - POSTGRES_USER=airflow
+      - POSTGRES_PASSWORD=airflow
+      - POSTGRES_DB=airflow
+  scheduler:
+    build: airflow
+    command: bash -c "airflow db init && airflow scheduler "
+    depends_on:
+      - postgres
+    env_file: 
+      - ".env"
+    environment: 
+      - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow
+      - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+      - AIRFLOW__CORE__FERNET_KEY='SfAtgh2hx_HqUPARLKBhTdR86E4fv0tlmcXqkEigOR8='
+    volumes:
+      - ../airflow_dag/dags:/opt/airflow/dags
+      - log:/opt/airflow/logs
+  webserver:
+    build: airflow
+    command: bash -c "airflow webserver "
+    depends_on:
+      - postgres
+      - scheduler
+    env_file: 
+      - ".env"
+    environment: 
+      - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow
+      - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+      - AIRFLOW__CORE__FERNET_KEY='SfAtgh2hx_HqUPARLKBhTdR86E4fv0tlmcXqkEigOR8='
+    volumes:
+      - ../airflow_dag/dags:/opt/airflow/dags
+      - log:/opt/airflow/logs
+    ports:
+      - "8084:8080"
+  
+
+volumes: 
+  mongodb:
+  elasticsearch:
+  mysql:
+  log:
+

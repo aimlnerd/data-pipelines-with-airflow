@@ -1,0 +1,152 @@
+# .gitignore specific to this project
+# ===================================
+dist
+build
+comlib.egg-info
+
+# env file
+.env
+
+# data
+sensitive/*
+.cache/*
+router/cache/*
+database.json
+data/*
+log/*
+!log/.empty
+uploads/*
+
+# models
+model/*
+
+# ide's config
+.idea/*
+.ropeproject
+
+# python generated files
+__pycache__
+.mypy_cache
+*.egg-info
+*.pyc
+dependencies/python-pdfbox/build
+dependencies/python-pdfbox/dist
+
+# log files
+corpus.log
+
+# local config files
+
+
+# Default .gitignore file
+# =======================
+
+# Mac OS X
+.DS_Store
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Folder config file
+Desktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Windows shortcuts
+*.lnk
+
+# Vagrant
+.vagrant/
+
+# IntelliJ
+.idea/
+*.iml
+*.iws
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# Maven
+log/
+target/
+
+# Gradle
+.gradle/
+build/
+
+# SASS
+**/.sass-cache
+**/.sass-cache/*
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# C extensions
+*.so
+
+# Distribution / packaging
+bin/
+build/
+develop-eggs/
+dist/
+eggs/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+.tox/
+.coverage
+.cache
+nosetests.xml
+coverage.xml
+
+# Translations
+*.mo
+
+# Mr Developer
+.mr.developer.cfg
+.project
+.pydevproject
+
+# Rope
+.ropeproject
+
+# Django stuff:
+*.log
+*.pot
+
+# Sphinx documentation
+docs/_build/
+
+# VSCode
+.vscode
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+data_exploration/data/anonymization.xlsx
+data_exploration/data/~$anonymization.xlsx
+data_exploration/data/query4_results.pdf
+data_exploration/data/query5_results.pdf
+data_exploration/src/data_versioning_problem_illustrate.pptx
+data_exploration/src/
