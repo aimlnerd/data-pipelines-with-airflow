@@ -8,7 +8,7 @@ import logging
 
 API = "https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&current_weather=True"
 @dag(schedule_interval='@daily', start_date=datetime(2019, 12, 2), catchup=False)
-def weather_alert():
+def store_weather_alert():
 
     @task(task_id='get_weather', retries=2)
     def get_current_weather() -> Dict[str, float]:
@@ -33,4 +33,4 @@ def weather_alert():
 
     store_data(compute_data(get_current_weather())) >> email_alert
 
-dag = weather_alert()
+dag = store_weather_alert()
