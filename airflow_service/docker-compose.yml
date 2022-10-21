@@ -146,7 +146,7 @@ services:
     volumes:
       - ../airflow_dag/dags:/opt/airflow/dags
       - log:/opt/airflow/logs
-      - airflow/airflow.cfg:/opt/airflow/airflow.cfg
+      - ./airflow/airflow.cfg:/opt/airflow/airflow.cfg
   webserver:
     build: airflow
     command: bash -c "airflow webserver "
@@ -162,7 +162,7 @@ services:
     volumes:
       - ../airflow_dag/dags:/opt/airflow/dags
       - log:/opt/airflow/logs
-      - airflow/airflow.cfg:/opt/airflow/airflow.cfg
+      - ./airflow/airflow.cfg:/opt/airflow/airflow.cfg
     ports:
       - "8084:8080"
   

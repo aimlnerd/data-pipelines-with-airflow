@@ -24,13 +24,6 @@ def store_weather_alert():
     def store_data(data: Dict[str, float]):
         logging.info(f"Store: {data['temperature']} with change {data['windspeed']}")
 
-    email_alert = EmailOperator(
-        task_id='email_alert',
-        to='hello@example.com',
-        subject='Dag completed',
-        html_content='the dag has finished'
-    )
-
-    store_data(compute_data(get_current_weather())) >> email_alert
+    store_data(compute_data(get_current_weather()))
 
 dag = store_weather_alert()
