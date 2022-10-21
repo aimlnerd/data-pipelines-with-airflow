@@ -39,7 +39,6 @@ def init_temp_file_and_copy_content(base_local_temp_dir, local_temp_file_path, b
     content = json_util.dumps(srsly.read_jsonl(local_temp_file_path))
 
     shutil.rmtree(base_local_temp_dir)
-    print(f"PRINTING FOR TESTING{content}")
     return content
 
 
@@ -64,7 +63,6 @@ def update_json(environment, task_instance):#task_instance is passed automatical
             f'init_temp_file_and_copy_content_{environment}'])[0]
     json_dump_lst = json_util.loads(json_dump)
     json_dump_lst += ['happy airflowing']
-    print(f"PRINTING FOR TESTING{json_dump_lst}")
     return json_util.dumps(json_dump_lst)
 
 
@@ -81,7 +79,6 @@ def write_to_blob(blob_client: BlobClient, local_temp_file_path, base_local_temp
     tasks_dump = task_instance.xcom_pull(
         task_ids=[f'update_json_{environment}'])[0]
     
-    print(f"PRINTING FOR TESTING{tasks_dump}")
     if not os.path.exists(base_local_temp_dir):
         os.makedirs(base_local_temp_dir, mode=0o777)
     os.chmod(base_local_temp_dir, mode=0o777)
